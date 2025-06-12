@@ -230,3 +230,51 @@
 
 == Git
 
+- Git*存储快照，而不是差异*。
+  - Git认为它的数据更像是一系列微型文件系统的快照。
+  - 在 commit，或者保存 project 状态的时候，Git 会存储当前的快照，并且保存一个引用 checksum。
+  - 为了存储效率，如果文件没有改动，Git 会直接连接上一个相同的已经存储的文件。
+- 几乎所有的操作都是*本地化的*。
+  - Git 不需要别的电脑或者网络来获取详细。
+- *完整性*。Git中，所有的东西都会先经过checksum再进行存储，并且通过checksum访问。
+  - 不可能在 Git 不知情的情况下改动文件或者目录。Git 使用 SHA-1 哈希对文件进行采样。
+  - Git 通过哈希值对文件进行存储，而不是文件名。
+- *只添加数据*。在 Git 中提交快照之后，非常难丢失数据。
+
+=== Git 架构
+
+#figure(image("assets/git-archi.png", height: 20%))
+
+=== Git 工作流
+
+- 初始化仓库 `git init`，生成 `.git` 工作目录；
+- 添加文件到 staging area，通过 `git add <file>`
+  - 未跟踪（_untracked_）的文件，不会被考虑到版本控制中，不会被存到数据库中，如果丢失，就没了。
+  - Staging area (index)，是一个在 Git 目录下的文件，存储了下一个 commit 的信息。
+  - Local repository，是 Git 用于存储元数据和对象数据库的地方。
+- 使用 `git commit` 来将 staging area 中的数据存储到 local repo 中改进的计划。
+
+#tip-box[
+  *Git 本地仓库的文件状态*
+
+  - 未跟踪（_Untracked_）
+  - 暂存（_Staged_）：已经标记为在当前版本中更改的文件，将会在下一个 commit 中保存快照；
+  - 已提交（_Commited_）：数据已经存储到本地数据库
+  - 已更改（_Modified_）：已经更改了文件，但是还没有提交到数据库
+]
+
+
+- 添加远程源：`git remote add <name> <URL>`
+- 推送远程仓库：`git push <remote> <local>`
+- 从远程仓库获取：`git fetch <remote>` 用于获取新的数据，`git pull <remote>` 获取数据，并给自动合并
+
+=== Git 本地仓库
+
+#figure(image("assets/git-local-repo.png", height: 20%))
+
+- *工作树*（Working tree）：一个版本的 checkout。从 git 目录中的压缩数据库中读取，用于使用或者更改。
+- *暂存区域*（Staging area）
+- *Git 目录*：用于存储元数据和对象数据库。
+
+=== Git 分支
+
